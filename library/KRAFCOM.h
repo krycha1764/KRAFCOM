@@ -56,7 +56,7 @@ typedef struct {
  * @brief Initializes the KRAFCOM packet receiver.
  *
  * @param receiver pointer to the KRAFCOM receiver structure
- * @param key key used for decryption, must be 32 bytes long
+ * @param key key used for decryption, must be 16 bytes long
  * @param packetHandlerCallback callback function that will be called each time a packet is received
  * @param context general purpose context, that will be fed back to the callback function
  */
@@ -68,7 +68,7 @@ void KRAFCOM_InitReceiver(KRAFCOM_Receiver *receiver, const uint8_t* key, KRAFCO
  * in the destination buffer as an array of bytes. The number of bytes written to the destination buffer
  * (length of the whole packet) shall be returned. In case of error, this function shall return 0.
  * @param packetType type of packet
- * @param key key used for encryption, must be 32 bytes long
+ * @param key key used for encryption, must be 16 bytes long
  * @param payload pointer to the payload data or NULL if the packet has no payload
  * @param payloadSize number of bytes in the payload or 0 if the packet has no payload
  * @param destinationBuffer place to store the packet bytes (must be large enough!)
