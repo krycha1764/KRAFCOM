@@ -17,6 +17,9 @@
 #define KRAFCOM_MAX_PAYLOAD 140
 #define KRAFCOM_PACKET_SIZE 166
 
+#define KRAFCOM_SOP 0xAB
+#define KRAFCOM_INIT_CRC 0xFFFFFFFF
+
 #include <stddef.h>
 #include <stdint.h>
 
@@ -48,6 +51,7 @@ typedef struct {
 	size_t counter;
 	KRAFCOM_PacketHandler packetHandler;
 	void* context;
+	uint8_t key[KRAFCOM_KEY_SIZE];
 } KRAFCOM_Receiver;
 
 
