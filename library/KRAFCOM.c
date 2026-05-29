@@ -17,6 +17,7 @@ void KRAFCOM_InitReceiver(KRAFCOM_Receiver *receiver, const uint8_t* key, KRAFCO
 	if(packetHandlerCallback == NULL) return;
 
 	receiver->counter = 0;
+	receiver->state = 0;
 	receiver->context = context;
 	receiver->packetHandler = packetHandlerCallback;
 
@@ -63,8 +64,34 @@ size_t KRAFCOM_Serialize(uint8_t packetType, const uint8_t* key, void const *pay
 
 void KRAFCOM_Deserialize(KRAFCOM_Receiver *receiver, void const *data, size_t dataLen) {
 
-	(void)receiver;
-	(void)data;
-	(void)dataLen;
+	for(size_t i = 0; i < dataLen; i++) {
+		uint8_t current_byte = ((uint8_t*)data)[i];
+		if(receiver->state == 0) {
+			if(current_byte == KRAFCOM_SOP) {
+				receiver->state = 1;
+				((uint8_t*)&(receiver->receivedPacket))[receiver->counter] = current_byte;
+				receiver->counter++;
+			}
+		} else if (receiver->state == 1) {
+			((uint8_t*)&(receiver->receivedPacket))[receiver->counter] = current_byte;
+			receiver->counter++;
+			if(receiver->counter >= KRAFCOM_PACKET_SIZE) {
+				uint32_t crc = crc32b(((uint8_t*)&(receiver->receivedPacket)), KRAFCOM_PACKET_SIZE - 4, KRAFCOM_INIT_CRC);
+				if(crc != receiver->receivedPacket.crc32) {
+					receiver->counter = 0;
+					receiver->state = 0;
+				} else {
+					struct AES_ctx ctx;
+					AES_init_ctx_iv(&ctx, receiver->key, receiver->receivedPacket.iv);
+					AES_CBC_decrypt_buffer(&ctx, ((uint8_t*)&(receiver->receivedPacket)) + 18, KRAFCOM_MAX_PAYLOAD + 4);
+
+					(receiver->packetHandler)(&(receiver->receivedPacket), receiver->context);
+
+					receiver->counter = 0;
+					receiver->state = 0;
+				}
+			}
+		}
+	}
 
 }

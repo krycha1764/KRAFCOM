@@ -51,6 +51,7 @@ typedef struct {
 	size_t counter;
 	KRAFCOM_PacketHandler packetHandler;
 	void* context;
+	uint8_t state;
 	uint8_t key[KRAFCOM_KEY_SIZE];
 } KRAFCOM_Receiver;
 

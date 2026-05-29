@@ -12,7 +12,7 @@
  *
  * @return number of written bytes
  */
-size_t KRAFCOM_getrandom(const void* buff, size_t len);
+size_t KRAFCOM_getrandom(void* buff, size_t len);
 
 /**
  * @brief get current time

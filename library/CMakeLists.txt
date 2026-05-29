@@ -4,7 +4,7 @@ project(KRAFCOM)
 
 add_subdirectory(tiny-AES-c)
 
-add_library(KRAFCOM STATIC)
+add_library(KRAFCOM)
 
 target_link_libraries(KRAFCOM
 	PRIVATE

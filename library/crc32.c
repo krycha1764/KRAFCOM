@@ -8,7 +8,7 @@ uint32_t crc32b(const uint8_t *data, const size_t len, uint32_t crc) {
 	for(size_t i = 0; i < len; i++) {
 		byte = data[i];            // Get next byte.
 		crc = crc ^ byte;
-		for (uint8_t j = 7; j >= 0; j--) {    // Do eight times.
+		for (int8_t j = 7; j >= 0; j--) {    // Do eight times.
 			mask = -(crc & 1);
 			crc = (crc >> 1) ^ (0xEDB88320 & mask);
 		}
